@@ -27,6 +27,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 1.新建目录和文件
 
 ## V1.1 vue-router路由管理(上)
+```
 1、路由配置
     a、动态路由
       {
@@ -65,6 +66,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
     c、路由替换
 3、路由别名
     a、alias
-
+```
 
 
