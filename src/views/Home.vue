@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    {{food}}
     <img alt="Vue logo" src="../assets/logo.png">
     <HelloWorld msg="Welcome to Your Vue.js App"/>
     <button @click="handleClick('back')">返回到上一页</button>
@@ -14,23 +15,46 @@ import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
   name: 'Home',
+  props: {
+    food: {
+      type: String,
+      default: 'apple'
+    }
+  },
   components: {
     HelloWorld
   },
+  //进入组件的时候触发的，这个时候组件还没渲染完成，还不能使用this
+  beforeRouteEnter(to,from,next){
+    console.log('beforeRouterEneter执行时，this的值是:' +this)
+    console.log('url来自：' + from.name);
+    console.log('url去往：' + to.name);
+    next((vm)=>{
+      console.log('next函数里可以调用vm实例，vm.food的值为：'+vm.food)
+    })
+  },
+  //在离开路由时会执行，比如离开页面时，提示你是否保存页面表单
+  beforeRouteLeave(to,from,next){
+    console.log('现在执行beforeRouterLeave')
+    const leave = confirm('您确定要离开吗？')
+    if(leave) next();
+    else next(false)
+  },
+
   methods: {
     handleClick(type){
       if(type==='back') this.$router.back()
       else if(type==='push') {
-        const name = 'lison'
+        const username = 'lison'
         this.$router.push({
 
           //方式1，es6模板语法
-          //path: `/argu/${name}`
+          //path: `/argu/${username}`
 
           //方式2，模板语法，带参数，和路由定义里面一样效果
           name: `argu`,
           params: {
-            name: 'lison'
+            username: 'lison'
           }
 
           //方式3，使用命名路由加params

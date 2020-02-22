@@ -3,10 +3,27 @@ import Home from '../views/Home.vue'
 //配置路由列表
 export default [
   {
+    path: '/login',
+    name: 'Login',
+    component: () => import(/* webpackChunkName: "about" */ '../views/login.vue')
+  },
+  {
     path: '/',
     name: 'Home',
     alias: '/home_page', //路由别名
-    component: Home
+    component: Home,
+
+    //路由传参1，函数方式
+    props: route =>({
+      food: route.query.food
+    }),
+    //路由独享守卫
+    beforeEnter:(to,from,next)=>{
+      if(from.name==='About') alert('这是从About来的')
+      else alert('这不是从About来的')
+      next()
+    }
+
   },
   {
     path: '/about',
@@ -15,13 +32,23 @@ export default [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     //路由懒加载
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    //路由传参1，对象方式
+    props: {
+      food: 'banana'
+    },
+    meta: {
+      title: '关于'
+    }
+
   },
   //动态路由
   {
-    path: '/argu/:name',
+    path: '/argu/:username',
     name: 'argu',
-    component: () => import('@/views/Argu.vue')
+    component: () => import('@/views/Argu.vue'),
+    //路由传参2，bool方式
+    props: true
   },
   //嵌套路由
   {
@@ -71,5 +98,9 @@ export default [
     path: '/main4',
     redirect: to => '/'
   },
+  {
+    path: '*',
+    component: () => import(/* webpackChunkName: "about" */ '../views/error_404.vue')
+  }
 
 ]
