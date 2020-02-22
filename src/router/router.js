@@ -8,6 +8,11 @@ export default [
     component: () => import(/* webpackChunkName: "about" */ '../views/login.vue')
   },
   {
+    path: '/store',
+    name: 'store',
+    component: () => import(/* webpackChunkName: "about" */ '../views/store.vue')
+  },
+  {
     path: '/',
     name: 'Home',
     alias: '/home_page', //路由别名
