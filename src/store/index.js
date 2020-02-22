@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import actions from './actions'
 import mutations from './mutations'
 import state from './state'
+import getters from './getters'
 import user from './module/user'
 
 import config from '@/config'
@@ -10,6 +11,7 @@ import config from '@/config'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  getters,
   state,
   mutations,
   actions,

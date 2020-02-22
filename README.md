@@ -190,3 +190,81 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
               })
             }
 ```
+
+## V1.4 Vuex基础01
+    a、vuex中state类似组件中的data
+    b、store中的数据获取方式(3种)
+        方式1
+        this.$store.state.username
+        方式2，module中的数据
+        this.$store.state.module.username
+        方式3，解构方式
+        import {mapState} from 'vuex'
+        ...mapState({
+                appName: state => state.appName,
+                userName: state => state.user.userName
+              }),
+
+         //上面的解构赋值import {mapState} from 'vuex'
+         //等价于
+        import vuex from 'vuex'
+        const mapState = vuex.mapState
+
+        //...mapState(['appName','userName']),
+        //等价于下面的方式
+            computed:{
+              appName(){
+                return this.$store.state.appName;
+              },
+              userName(){
+                return this.$store.state.user.userName
+              }
+            },
+    c、命名空间
+        模块中设置命名空间：
+        export default {
+          //使用命名空间,可以使模块更加密闭，不受外界干扰
+          namespaced: true,
+          state,
+          mutations,
+          actions
+        }
+
+        //使用命名空间方式
+          import { createNamespacedHelpers } from 'vuex'
+          const {mapState} = createNamespacedHelpers('user')
+
+        //使用命名空间方式引用数据
+              ...mapState({
+                userName: state => state.userName
+              })
+    d、vuex中的getters
+        vuex中的getters类似模块中的计算属性
+        1、定义：
+            const getters = {
+              appNameWithVersion: (state) => {
+                return `${state.appName}v2.0`
+              }
+            }
+            export default getters
+        2、注册
+            export default new Vuex.Store({
+              getters,
+              state,
+              mutations,
+              actions,
+              modules: {
+                user
+              }
+            })
+        3、使用
+         import {mapGetters } from 'vuex'
+           ...mapGetters([
+                 'appNameWithVersion'
+               ])
+         view中直接使用
+         <div>appname:{{appName}} appNameWithVersion:{{appNameWithVersion}}</div>
+         注意：如果开启了命名空间，则需要如下方式使用
+         ...mapGetters('user',[
+                          'appNameWithVersion'
+                        ])
