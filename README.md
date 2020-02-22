@@ -167,4 +167,26 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
         opacity: 0;
       }
 ```
-
+## V1.3 bus(多组件之间通讯)
+```
+    1、创建bus实例
+        import Vue from 'vue'
+        const Bus = new Vue()
+        export default Bus
+    2、main.js引入
+        import Bus from './lib/bus
+        Vue.prototype.$bus = Bus
+    3、组件之间通过bus通讯
+        组件A：emit提交事件，并传入参数
+        methods: {
+                  handleClick () {
+                    this.$bus.$emit('on-click', 'hello')
+                  }
+                }
+        组件B：侦听事件，接受传过来的参数
+        mounted () {
+              this.$bus.$on('on-click', mes => {
+                this.message = mes
+              })
+            }
+```
