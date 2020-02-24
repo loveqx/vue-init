@@ -268,3 +268,155 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
          ...mapGetters('user',[
                           'appNameWithVersion'
                         ])
+## V1.5 Vuex基础02
+    ### a、vuex中的mutations
+    mutation：变异、改变的意思，是用来改变state中的数据的。通过commit进行数据修改。
+        1、定义方法
+        import vue from 'vue'
+        const mutations = {
+          SET_APP_NAME(state,params){
+            //参数是对象
+            //state.appName = params.appName
+            //参数是字符串
+            state.appName = params
+          },
+          SET_APP_VERSION(state){
+            vue.set(state,'appVersion','v2.0')
+          }
+        }
+
+        export default mutations
+
+        2、在组件中使用mutations
+        结构mutation
+        import { mapState, mapGetters, mapMutations } from 'vuex'
+        在methods中使用方法，
+         methods: {
+              ...mapMutations([
+                'SET_APP_VERSION',
+                'SET_APP_NAME',
+                'SET_USER_NAME'
+              ]),
+               handleUsername(){
+                      this.SET_USER_NAME('新用户名')
+                    }
+         }
+         注意1：如果在module中使用了namespanced：true时，引用方法是需要加入模块名
+           ...mapMutations('user',[
+             'SET_USER_NAME'
+           ]),
+         注意2、如果数据是异步获取的，需要修改的话，需要通过actions异步修改
+
+    ### b、vuex中的actions
+    1、定义方法
+        import {getAppName} from '@/api/app'
+
+        const actions ={
+          //同步方式
+          /*updateAppName({commit}){
+            getAppName().then(res=>{
+              console.log(res)
+              //解构赋值方法
+              const {code,info:{appName}} = res
+              commit('SET_APP_NAME',appName)
+            }).catch(err=>{
+              console.log(err)
+            })
+          }*/
+          //等价于如下方式
+          /*updateAppName(paramsOBJ){
+            const commit = paramsObj.commit
+          }*/
+
+          //异步实现同步效果
+          async updateAppName({commit}){
+            try{
+              const {info:{appName}} = await getAppName()
+              commit('SET_APP_NAME',appName)
+            }catch(err){
+              console.log(err)
+            }
+          }
+        }
+
+        export default actions
+    2、在组件中使用
+         import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+         methods: {
+         ...mapActions([
+                 'updateAppName'
+               ]),
+          handleChangeAppName(){
+            this.updateAppName();
+          }
+         }
+    ### c、vuex中的模块
+        当vuex中数据很多时，我们需要把同一类数据，比如用户数据相关、某一业务数据相关的放在一起，这样就形成了模块。
+        1、新建模块
+            新建module文件夹
+        2、新建文件
+            新建业务文件，如user，代表user模块。如果数据量大，则可以新建user文件夹，下面新建actions、mutations、getters、state、index文件
+        3、使用
+             const state ={
+               userName: 'xuequn'
+             }
+             const getters ={
+               firstLetter: (state)=>{
+                 return state.userName.substr(0,1)
+               }
+             }
+             const mutations ={
+               SET_USER_NAME(state,params){
+                 state.userName = params
+               }
+             }
+             const actions ={
+               updateUserName({commit ,state,rootState,dispatch}){
+
+               }
+             }
+
+
+             export default {
+               //使用命名空间,可以使模块更加密闭，不受外界干扰
+               //namespaced: true,
+               getters,
+               state,
+               mutations,
+               actions
+             }
+        4、组件中使用
+            和前面的一样
+            import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+            methods中引入，然后调用对应的方法即可,如果使用了namespaced，则需要加入模块名才能引入。
+                ...mapMutations('user',[
+                        'SET_USER_NAME'
+                      ]),
+                  ...mapActions('user',[
+                    'updateAppName'
+                  ]),
+
+    ## d、动态注册模块
+    //动态注册模块，直接调用registerModule就可以注册新模块，而且，可以嵌套注册。注册模块后，同样也可以定义state、mutations、actions等
+          /*registerModule(){
+            this.$store.registerModule('todo',{
+              state:{
+                todoList: [
+                  '学习Vue-Router',
+                  '学习Vuex'
+                ]
+              }
+            })
+          }*/
+          //动态注册模块(多级)
+          registerModule(){
+            this.$store.registerModule(['user','todo'],{
+              state:{
+                todoList: [
+                  '学习Vue-Router',
+                  '学习Vuex'
+                ]
+              }
+            })
+          }
+

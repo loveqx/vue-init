@@ -7,11 +7,16 @@ const getters ={
   }
 }
 const mutations ={
-
+  SET_USER_NAME(state,params){
+    state.userName = params
+  }
 }
 const actions ={
+  updateUserName({commit ,state,rootState,dispatch}){
 
+  }
 }
+
 
 export default {
   //使用命名空间,可以使模块更加密闭，不受外界干扰
