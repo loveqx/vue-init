@@ -1,6 +1,9 @@
 <template>
   <div>
+    <input v-model="stateValue">
+    <p>{{stateValue}}</p>
     <a-input @input="handleInput"/>
+
     <!-- <p>{{ inputValue }}</p> -->
     <a-show :content="inputValue"/>
     <button @click="handleChangeAppName">修改appName</button>
@@ -11,7 +14,6 @@
     <div>
       <li v-for="(todo,index) in todoList" :key="index">{{todo}}</li>
     </div>
-  </div>
   </div>
 </template>
 <script>
@@ -36,6 +38,14 @@
       }
     },
     computed:{
+      stateValue: {
+        get () {
+          return this.$store.state.stateValue
+        },
+        set (val) {
+          this.SET_STATE_VALUE(val)
+        }
+      },
       //等价于下面的方式
       //...mapState(['appName']),
       /*...mapState({
@@ -70,7 +80,8 @@
       ...mapMutations([
         'SET_APP_VERSION',
         'SET_APP_NAME',
-        'SET_USER_NAME'
+        'SET_USER_NAME',
+        'SET_STATE_VALUE'
       ]),
       ...mapActions([
         'updateAppName'

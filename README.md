@@ -419,4 +419,46 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
               }
             })
           }
+###1.6 Vuex进阶
+    a、插件
+        vuex中可以使用插件
+        1、store中新建plugin文件夹
+        2、配置plugin
+            export default store => {
+              if (localStorage.state) store.replaceState(JSON.parse(localStorage.state))
+              store.subscribe((mutation, state) => {
+                localStorage.state = JSON.stringify(state)
+              })
+            }
+        3、mutations有变化时，会在localStorage中保存state
+
+    b、严格模式
+        strict：false,默认为false没有错误提示，我们可以通过以下设置开发环境为true，生产环境为false
+        strict: process.env.NODE_ENV === 'development',
+    c、vuex中的双向绑定
+        <input v-model="inputValue">
+        v-model有2个功能：1、会接受输入的数据作为value
+                         2、input事件侦听，value变化后触发
+         所以有双向绑定功能。
+    d、vuex中实现双向绑定
+        mutations中定义方法
+             SET_STATE_VALUE (state, value) {
+                state.stateValue = value
+              }
+        组件中使用
+            methods引入
+            ...mapMutations([ 'SET_STATE_VALUE'
+                                   ]),
+            computed中定义
+                stateValue: {
+                        get () {
+                          return this.$store.state.stateValue
+                        },
+                        set (val) {
+                          this.SET_STATE_VALUE(val)
+                        }
+
+            组件使用
+                <input v-model="stateValue">
+                <p>{{stateValue}}</p>
 
