@@ -419,7 +419,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
               }
             })
           }
-###1.6 Vuex进阶
+## 1.6 Vuex进阶
     a、插件
         vuex中可以使用插件
         1、store中新建plugin文件夹
